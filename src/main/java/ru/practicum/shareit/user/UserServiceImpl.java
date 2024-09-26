@@ -33,7 +33,8 @@ public class UserServiceImpl implements UserService {
         userRepository.isEmailAlreadyUse(user.getEmail());
         if (Objects.isNull(user.getName())) {
             user.setName(userRepository.getUserById(user.getId()).get().getName());
-        } if (Objects.isNull(user.getEmail())) {
+        }
+        if (Objects.isNull(user.getEmail())) {
             user.setEmail(userRepository.getUserById(user.getId()).get().getEmail());
         }
         return userMapper.toUserFullDto(

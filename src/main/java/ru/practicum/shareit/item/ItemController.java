@@ -17,7 +17,7 @@ import java.util.Collections;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
-    private final static String SHARER_USER_ID = "X-Sharer-User-Id";
+    private static final  String SHARER_USER_ID = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @PostMapping
