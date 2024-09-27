@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(@RequestHeader(SHARER_USER_ID) Long userId,
-                              @RequestBody @Validated ItemCreateDto item) {
+                              @RequestBody @Valid ItemCreateDto item) {
         log.info("==> Create item: {}", item);
         item.setOwnerId(userId);
         ItemDto itemToCreate = itemService.createItem(item);
@@ -33,7 +35,7 @@ public class ItemController {
     @PatchMapping("{itemId}")
     public ItemDto updateItem(@PathVariable @NotNull Long itemId,
                               @RequestHeader(SHARER_USER_ID) @NotNull Long userId,
-                              @RequestBody @Validated ItemUpdateDto item) {
+                              @RequestBody @Valid ItemUpdateDto item) {
         log.info("==> Update item with ID: {}", itemId);
         item.setId(itemId);
         item.setOwnerId(userId);

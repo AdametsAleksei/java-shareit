@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Validated final UserCreateDto user) {
+    public UserDto createUser(@RequestBody @Valid final UserCreateDto user) {
         log.info("==> Create user: {}", user);
         UserDto userCreated = userService.createUser(user);
         log.info("<== User created with id : {}", userCreated.getId());
@@ -33,7 +35,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable @NotNull Long userId, @RequestBody @Validated final UserUpdateDto user) {
+    public UserDto updateUser(@PathVariable @NotNull Long userId,
+                              @RequestBody @Valid final UserUpdateDto user) {
         log.info("==> Update user by id: {}", userId);
         user.setId(userId);
         UserDto userUpdated = userService.updateUser(user);
