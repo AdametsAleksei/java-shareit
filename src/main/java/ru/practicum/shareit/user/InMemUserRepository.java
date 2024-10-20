@@ -19,7 +19,7 @@ public class InMemUserRepository implements UserRepository {
 
     @Override
     public User createUser(User user) {
-        user.setId(createUserId());
+//        user.setId(createUserId());
         users.put(user.getId(), user);
         emails.put(user.getEmail(), user.getId());
         return users.get(user.getId());
