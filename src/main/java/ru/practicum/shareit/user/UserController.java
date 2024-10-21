@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping
     public UserDto createUser(@RequestBody @Valid final UserCreateDto user) {
         log.info("==> Create user: {}", user);
-        UserDto userCreated = userService.createUser(user);
+        UserDto userCreated = userService.saveUser(user);
         log.info("<== User created with id : {}", userCreated.getId());
         return userCreated;
     }
