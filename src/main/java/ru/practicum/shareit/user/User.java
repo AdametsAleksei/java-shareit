@@ -1,18 +1,27 @@
 package ru.practicum.shareit.user;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
 
-@Getter
 @Builder
+@Getter
 @Entity
+@Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+
     @Id
-    @GeneratedValue
-    @Column(name = "USER_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
-    private final String name;
-    private final String email;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "email")
+    private String email;
 }

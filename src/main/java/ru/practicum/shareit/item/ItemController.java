@@ -4,12 +4,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemCreateDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.dto.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,8 +24,7 @@ public class ItemController {
     public ItemDto createItem(@RequestHeader(SHARER_USER_ID) Long userId,
                               @RequestBody @Valid ItemCreateDto item) {
         log.info("==> Create item: {}", item);
-        item.setOwnerId(userId);
-        ItemDto itemToCreate = itemService.createItem(item);
+        ItemDto itemToCreate = itemService.createItem(item, userId);
         log.info("<== Created item with ID: {}", userId);
         return itemToCreate;
     }
@@ -46,17 +42,18 @@ public class ItemController {
     }
 
     @GetMapping("{itemId}")
-    public ItemDto getItemById(@PathVariable @NotNull Long itemId) {
+    public ItemDto getItemById(@PathVariable @NotNull Long itemId,
+                               @RequestHeader(SHARER_USER_ID) @NotNull Long userId) {
         log.info("==> Get item with ID: {}", itemId);
-        ItemDto item = itemService.getItemById(itemId);
+        ItemDto item = itemService.getItemById(itemId, userId);
         log.info("<== Get item with ID: {}", itemId);
         return item;
     }
 
     @GetMapping
-    public Collection<ItemDto> getItemsByUser(@RequestHeader(SHARER_USER_ID) @NotNull Long userId) {
+    public Collection<ItemCommentAndDateDto> getItemsByUser(@RequestHeader(SHARER_USER_ID) @NotNull Long userId) {
         log.info("==> Get items by user with ID: {}", userId);
-        Collection<ItemDto> itemsByUser = itemService.getItemsByUser(userId);
+        Collection<ItemCommentAndDateDto> itemsByUser = itemService.getItemsByOwnerId(userId);
         log.info("<== Get items by user with ID: {}", userId);
         return Collections.unmodifiableCollection(itemsByUser);
     }
@@ -64,8 +61,20 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ItemDto> searchByName(@RequestParam("text") @NotNull String name) {
         log.info("==> Search items by query: {}", name);
-        Collection<ItemDto> itemsBySearch = itemService.searchByName(name);
+        Collection<ItemDto> itemsBySearch = itemService.findByName(name);
         log.info("<== Search items by query: {}", name);
         return Collections.unmodifiableCollection(itemsBySearch);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(SHARER_USER_ID) Long userId,
+                                 @PathVariable Long itemId,
+                                 @RequestBody @Valid CommentCreateDto commentCreateDto) {
+        log.info("==> Add comment by user ID: {} to item ID: {}", userId, itemId);
+        commentCreateDto.setItemId(itemId);
+        commentCreateDto.setAuthorId(userId);
+        CommentDto comment = itemService.addComment(commentCreateDto);
+        log.info("<== Added comment with ID: {}", comment.getId());
+        return comment;
     }
 }
