@@ -4,7 +4,6 @@ import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.*;
@@ -24,7 +23,6 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
-    private final BookingMapper bookingMapper;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
@@ -37,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
         ItemDto itemDto = itemMapper.toItemFullDto(item);
         itemDto.setComments(commentMapper.toCommentDtoList(comments));
 
-        if (item.getOwner().getId() == userId) {
+        if (Objects.equals(item.getOwner().getId(), userId)) {
             Booking lastBooking = bookingRepository.findFirstByItemAndEndBeforeOrderByEndDesc(
                     item, LocalDateTime.now());
             if (lastBooking != null && !lastBooking.getBooker().getId().equals(item.getOwner().getId())) {
@@ -57,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
         checkUserExist(ownerId);
         Collection<ItemCommentAndDateDto> itemsByOwner = new ArrayList<>();
 
-        itemRepository.getItemsByOwnerId(ownerId).stream().forEach(item -> {
+        itemRepository.getItemsByOwnerId(ownerId).forEach(item -> {
             ItemCommentAndDateDto itemOwnerDto = itemMapper.toItemCommentAndDateDtoFromItem(item);
 
             Booking lastBooking = bookingRepository.findFirstByItemAndEndBeforeOrderByEndDesc(
@@ -132,8 +130,8 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Item with id "
                         + commentCreateDto.getItemId() + " not found"));
 
-        boolean hasBooked = bookingRepository.
-                existsByItemIdAndBookerIdAndEndBefore(item.getId(), author.getId(), LocalDateTime.now());
+        boolean hasBooked = bookingRepository
+                .existsByItemIdAndBookerIdAndEndBefore(item.getId(), author.getId(), LocalDateTime.now());
         if (!hasBooked) {
             throw new ValidationException("User has not rented this item or rental is not completed");
         }
