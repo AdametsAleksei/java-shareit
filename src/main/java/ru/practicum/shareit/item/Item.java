@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import ru.practicum.shareit.user.User;
 
@@ -30,6 +31,7 @@ public class Item {
     private String description;
 
     @Column(name = "available")
+    @NotNull
     private Boolean available;
 
     @ManyToOne
