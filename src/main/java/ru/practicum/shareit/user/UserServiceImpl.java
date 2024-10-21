@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
                 "Пользователь c ID - " + userId + " не найден")));
     }
 
+    @Transactional
     @Override
     public UserDto saveUser(UserCreateDto user) {
         validateEmail(user.getEmail());
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(userMapper.toUserFromCreateDto(user)));
     }
 
+    @Transactional
     @Override
     public UserDto updateUser(UserUpdateDto user) {
         validateEmail(user.getEmail());
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(userMapper.toUserFromUpdateDto(user)));
     }
 
+    @Transactional
     @Override
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);

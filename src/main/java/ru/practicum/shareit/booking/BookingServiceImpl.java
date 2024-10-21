@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final BookingMapper bookingMapper;
 
+    @Transactional
     public BookingDto addBooking(BookingCreateDto bookingCreateDto, Long userId) {
         if (bookingCreateDto.getStart() == null || bookingCreateDto.getEnd() == null) {
             throw new ValidationException("Start and end dates must not be null");
@@ -47,6 +49,7 @@ public class BookingServiceImpl implements BookingService {
                 bookingMapper.toBookingFromCreateDto(bookingCreateDto, item, booker)));
     }
 
+    @Transactional
     public BookingDto approveBooking(Long bookingId, Long ownerId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Booking not found"));

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,7 @@ public class ItemServiceImpl implements ItemService {
         return itemsByOwner;
     }
 
+    @Transactional
     @Override
     public ItemDto createItem(ItemCreateDto item, Long userId) {
         User owner = checkUserExist(userId);
@@ -92,6 +94,7 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
+    @Transactional
     @Override
     public ItemDto updateItem(ItemUpdateDto item) {
         Long ownerId = item.getOwnerId();
@@ -123,6 +126,7 @@ public class ItemServiceImpl implements ItemService {
         return itemsBySearch;
     }
 
+    @Transactional
     @Override
     public CommentDto addComment(CommentCreateDto commentCreateDto) {
         User author = checkUserExist(commentCreateDto.getAuthorId());
