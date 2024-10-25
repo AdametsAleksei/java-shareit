@@ -8,7 +8,7 @@ public interface UserService {
 
     UserDto getUserById(Long userId);
 
-    UserDto createUser(UserCreateDto user);
+    UserDto saveUser(UserCreateDto user);
 
     UserDto updateUser(UserUpdateDto user);
 
