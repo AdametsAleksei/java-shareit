@@ -1,13 +1,15 @@
 package ru.practicum.shareit.booking;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 
-@RestController
+@Controller
 @RequestMapping("/bookings")
 @AllArgsConstructor
 public class BookingController {
@@ -17,7 +19,15 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestHeader(SHARER_USER_ID) long userId,
                                                 @RequestBody @Valid BookingCreateDto booking) {
-        return bookingClient.createBooking(booking, userId);
+        if (booking.getStart() == null || booking.getEnd() == null) {
+            throw new ValidationException("Start and end dates must not be null");
+        }
+        if (booking.getStart().isAfter(booking.getEnd())
+                || booking.getStart().equals(booking.getEnd())) {
+            throw new ValidationException("Something wrong with start and end date");
+        } else {
+            return bookingClient.createBooking(booking, userId);
+        }
     }
 
     @PatchMapping(("/{bookingId}"))

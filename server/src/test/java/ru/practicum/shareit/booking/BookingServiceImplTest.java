@@ -60,34 +60,6 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void addBooking_WithStartTimeNull_ShouldThrowException() {
-        bookingCreate.setStart(null);
-        Assertions.assertThrows(ValidationException.class,
-                () -> bookingService.addBooking(bookingCreate, userId));
-    }
-
-    @Test
-    void addBooking_WithEndTimeNull_ShouldThrowException() {
-        bookingCreate.setEnd(null);
-        Assertions.assertThrows(ValidationException.class,
-                () -> bookingService.addBooking(bookingCreate, userId));
-    }
-
-    @Test
-    void addBooking_WithStartAfterEnd_ShouldThrowException() {
-        bookingCreate.setStart(end.plusHours(1));
-        Assertions.assertThrows(ValidationException.class,
-                () -> bookingService.addBooking(bookingCreate, userId));
-    }
-
-    @Test
-    void addBooking_WithStartEqualsEnd_ShouldThrowException() {
-        bookingCreate.setStart(end);
-        Assertions.assertThrows(ValidationException.class,
-                () -> bookingService.addBooking(bookingCreate, userId));
-    }
-
-    @Test
     void addBooking_UserNotExist_ShouldThrowException() {
         Assertions.assertThrows(NotFoundException.class,
                 () -> bookingService.addBooking(bookingCreate, 100L));

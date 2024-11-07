@@ -4,12 +4,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
-@RestController
+@Controller
 @RequestMapping(path = "/users")
 @Validated
 @RequiredArgsConstructor
@@ -33,7 +34,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable @NotNull Long userId) {
+    public ResponseEntity<Object> deleteUser(@PathVariable @NotNull Long userId) {
         userClient.deleteUser(userId);
+        return ResponseEntity.ok().build();
     }
 }

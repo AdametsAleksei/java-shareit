@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +14,7 @@ import ru.practicum.shareit.user.dto.UserUpdateDto;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController {
+public class    UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId) {
+    public void deleteUser(@PathVariable @NotNull Long userId) {
         log.info("==> Delete user by id: {}", userId);
         userService.deleteUser(userId);
         log.info("<== User deleted by id: {}", userId);

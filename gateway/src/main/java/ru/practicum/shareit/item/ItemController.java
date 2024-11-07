@@ -4,13 +4,16 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
-@RestController
+import java.util.List;
+
+@Controller
 @RequestMapping(path = "/items")
 @Validated
 @RequiredArgsConstructor
@@ -45,7 +48,11 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> searchByName(@RequestParam("text") @NotNull String name,
                                                @RequestHeader(SHARER_USER_ID) @NotNull Long userId) {
-        return itemClient.searchByName(userId, name);
+        if (name.isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        } else {
+            return itemClient.searchByName(userId, name);
+        }
     }
 
     @PostMapping("/{itemId}/comment")

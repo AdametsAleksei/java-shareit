@@ -28,13 +28,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     public BookingDto addBooking(BookingCreateDto bookingCreateDto, Long userId) {
-        if (bookingCreateDto.getStart() == null || bookingCreateDto.getEnd() == null) {
-            throw new ValidationException("Start and end dates must not be null");
-        }
-        if (bookingCreateDto.getStart().isAfter(bookingCreateDto.getEnd())
-                || bookingCreateDto.getStart().equals(bookingCreateDto.getEnd())) {
-            throw new ValidationException("Something wrong with start and end date");
-        }
         User booker = checkUserExist(userId);
         Item item = checkItemExist(bookingCreateDto.getItemId());
         if (Objects.equals(item.getOwner().getId(), userId)) {
@@ -43,7 +36,6 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getAvailable()) {
             throw new ValidationException("Item is not available");
         }
-
         return bookingMapper.toBookingDto(bookingRepository.save(
                 bookingMapper.toBookingFromCreateDto(bookingCreateDto, item, booker)));
     }
@@ -80,7 +72,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getOwnerItemsBookings(BookingState state, Long userId) {
+    public List<BookingDto>         getOwnerItemsBookings(BookingState state, Long userId) {
         checkUserExist(userId);
         if (itemRepository.getItemsByOwnerId(userId).isEmpty()) return new ArrayList<>();
         List<Booking> userBookings = bookingRepository.findAllBookersByItemOwnerId(userId);
