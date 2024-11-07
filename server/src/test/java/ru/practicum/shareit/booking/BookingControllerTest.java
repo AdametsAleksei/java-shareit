@@ -112,7 +112,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void getBookingById(){
+    void getBookingById() {
         when(bookingService.getBookingById(bookingId, userId)).thenReturn(bookingDone);
         mockMvc.perform(get("/bookings/{bookingId}", bookingId)
                     .header(SHARER_USER_ID, userId)

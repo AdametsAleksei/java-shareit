@@ -103,7 +103,7 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
-    void getUserById(){
+    void getUserById() {
         when(userService.getUserById(userId)).thenReturn(userDone);
         mockMvc.perform(get("/users/{userId}", userId)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -114,8 +114,9 @@ class UserControllerTest {
         verify(userService, times(1)).getUserById(userId);
     }
 
+    @SneakyThrows
     @Test
-    void deleteUserById() throws Exception {
+    void deleteUserById(){
         mockMvc.perform(delete("/users/{userId}", userId)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
