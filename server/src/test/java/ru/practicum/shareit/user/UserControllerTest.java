@@ -116,7 +116,7 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
-    void deleteUserById(){
+    void deleteUserById() {
         mockMvc.perform(delete("/users/{userId}", userId)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
